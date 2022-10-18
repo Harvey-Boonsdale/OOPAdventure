@@ -12,7 +12,7 @@ class Room {
   linkRoom(direction, roomToLink) {
     this.linkedRooms[direction] = roomToLink;
   }
-
+  // Checks to see if you can move in this direction from this room
   moveBy(direction) {
     if (direction in this.linkedRooms) {
       return this.linkedRooms[direction];
@@ -42,7 +42,7 @@ class Character {
 
 const kitchen = new Room("Kitchen");
 kitchen.description =
-  "It is looking rather worse for wear with a two ring burner, cheap microwave and a cupboard with a broken door.";
+  "It is looking rather worse for wear with a two ring burner, cheap microwave and a cupboard with a broken door. There are vicious rats in here";
 const frontRoom = new Room("Front Room");
 frontRoom.description =
   "The paint is peeling off the walls and there is clearly a damp problem. You pick up a box of rat poison from the table";
@@ -64,10 +64,8 @@ const enemy1 = new Character("Evil Landlord");
 enemy1.inventory = "frying pan";
 enemy1.power = "ability to raise your rent";
 const enemy2 = new Character("Rats");
-enemy2.inventory;
-("Teeth");
-enemy2.power;
-("Rabies");
+enemy2.inventory = "Teeth";
+enemy2.power = "Rabies";
 
 function displayRoomInfo(room) {
   document.getElementById("textarea").innerHTML = room.describe();
@@ -85,18 +83,22 @@ document.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
     command = document.getElementById("ui").value;
     const directions = ["north", "south", "east", "west"];
+    // Checks if user has input a valid input
     if (directions.includes(command.toLowerCase())) {
-      currentRoom = currentRoom.moveBy(command);
+      currentRoom = currentRoom.moveBy(command.toLowerCase());
       displayRoomInfo(currentRoom);
+      if (currentRoom.name === "Front Room") {
+        user1.inventory = "Poison";
+      }
+      console.log(user1.inventory);
+      if (currentRoom.name === "Kitchen" && user1.inventory === "Poison") {
+        document.getElementById("textarea").innerHTML =
+          "You are back in the Kitchen and the rats are really ferocious now. Do you want to use the poison?";
+      }
+      console.log(currentRoom.name, user1.inventory);
     } else {
       document.getElementById("ui").value = "";
       alert("That is not a valid command, please try again");
     }
   }
 });
-
-if (currentRoom.name === "Front Room") {
-  user1.inventory = "Poison";
-}
-
-console.log(user1.inventory);
