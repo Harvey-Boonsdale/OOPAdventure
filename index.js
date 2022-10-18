@@ -82,20 +82,28 @@ startGame();
 document.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
     command = document.getElementById("ui").value;
-    const directions = ["north", "south", "east", "west"];
+    const directions = ["north", "south", "east", "west", "yes", "no"];
     // Checks if user has input a valid input
     if (directions.includes(command.toLowerCase())) {
       currentRoom = currentRoom.moveBy(command.toLowerCase());
       displayRoomInfo(currentRoom);
+      //I want the input to clear here
+      //document.getElementById("ui").reset();
       if (currentRoom.name === "Front Room") {
         user1.inventory = "Poison";
       }
       console.log(user1.inventory);
       if (currentRoom.name === "Kitchen" && user1.inventory === "Poison") {
+        console.log(user1.inventory);
         document.getElementById("textarea").innerHTML =
           "You are back in the Kitchen and the rats are really ferocious now. Do you want to use the poison?";
+        document.getElementById("ui").placeholder = "yes or no";
+        document.getElementById("ui").innerHTML.style.display = "none";
+        if (currentRoom.name === "Kitchen" && directions === "yes") {
+          document.getElementById("textarea)").innerHTML =
+            "You killed the rats!";
+        }
       }
-      console.log(currentRoom.name, user1.inventory);
     } else {
       document.getElementById("ui").value = "";
       alert("That is not a valid command, please try again");
